@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monte seu Kit Festa - Sousil Festas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://esm.sh/@google/genai@^0.7.0"
+      }
+    }
+  </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Visualização de Reserva (Cliente) -->
+    <div id="main-view">
+      <header>
+        <img src="sousil-festas-logo.png" alt="Logo Sousil Festas" class="logo">
+        <h1>Monte seu Kit Festa</h1>
+        <p>Crie o cenário perfeito para sua celebração de forma interativa!</p>
+        <div class="collections-promo">
+            <button id="collections-button" class="button-collections">✨ Coleções 2025 ✨</button>
+        </div>
+      </header>
+      <main>
+        <section id="visual-preview-container" aria-labelledby="visual-preview-title">
+          <h2 id="visual-preview-title">Pré-visualização do Kit</h2>
+          <button id="preview-fullscreen-button" aria-label="Ampliar pré-visualização">⛶</button>
+          <div id="visual-preview" role="img" aria-label="Visualização do kit de festa montado">
+            <p class="placeholder-text">Selecione os itens no painel ao lado para começar a montar seu kit.</p>
+          </div>
+        </section>
+        <section id="controls-panel" aria-labelledby="controls-panel-title">
+          <h2 id="controls-panel-title" class="sr-only">Painel de Controle</h2>
+          
+          <div class="control-section">
+            <h3>1. Escolha os Itens</h3>
+            <div id="item-selection"></div>
+          </div>
+
+          <div class="control-section">
+            <h3>2. Escolha o Tema</h3>
+            <div id="theme-selection"></div>
+          </div>
+
+          <div class="control-section">
+            <h3>3. Modalidade do Serviço</h3>
+            <div id="service-type-selection"></div>
+          </div>
+
+          <div class="control-section summary">
+            <h3>4. Resumo do Pedido</h3>
+            <div id="order-summary">
+                <p>Nenhum item selecionado.</p>
+            </div>
+          </div>
+
+          <div class="control-section">
+            <h3>5. Agende a Data e Horário</h3>
+            <form id="booking-form-schedule">
+                <div id="booking-calendar"></div>
+                <div class="form-group-inline">
+                    <div class="form-group">
+                        <label for="delivery-time">Horário para Entrega</label>
+                        <input type="time" id="delivery-time" name="delivery-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickup-time">Horário para Retirada</label>
+                        <input type="time" id="pickup-time" name="pickup-time" required>
+                    </div>
+                </div>
+            </form>
+          </div>
+
+          <div class="control-section">
+            <h3>6. Dados da Reserva</h3>
+            <form id="booking-form">
+              <div class="form-group">
+                <label for="name">Nome Completo</label>
+                <input type="text" id="name" name="name" required>
+              </div>
+              <div class="form-group">
+                <label for="address">Endereço (para entrega e montagem)</label>
+                <input type="text" id="address" name="address" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Telefone (WhatsApp)</label>
+                <input type="tel" id="phone" name="phone" required>
+              </div>
+              <div class="action-buttons-container">
+                <button type="submit" id="submit-booking" disabled>Reservar Agora</button>
+                <a href="https://wa.me/5511976520132" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.6-9.5-97.2-26.7l-7.1-4.2-71.2 18.6L46 353.7l-4.5-7.3C18.7 318.8 8.3 284.8 8.3 249.1 8.3 134.4 97.4 45 224 45c57.1 0 110.3 22.3 150.1 62.1 39.8 39.8 62 92.9 62 150.1-1.1 114.7-93.8 206.5-208.2 206.5zm105.7-160.7c-6.1-3-36.8-18.2-42.6-20.2s-9.9-3-14.1 3c-4.2 6-16.2 20.2-19.9 24.3-3.7 4.2-7.4 4.6-13.5 1.6-6.1-3-25.9-9.5-49.3-30.3-18.2-16.2-30.5-36.2-34.1-42.3s-3.7-9.1-.4-12.1c3.2-3 6.9-7.7 10.4-11.4 3.4-3.7 4.6-6.1 6.9-10.2s3.7-8.2 2.6-11.2c-1.2-3-14.1-34.1-19.2-46.6-5.2-12.5-10.4-10.7-14.1-10.9h-13.5c-4.2 0-9.1 1.2-13.5 6.1s-16.2 15.6-16.2 37.9c0 22.3 16.5 44 18.9 46.4s32.4 49.1 78.5 69.3c11.2 4.8 19.9 7.7 26.7 9.9 10.9 3.6 20.8 3.1 28.7 1.9 8.6-1.2 26.7-10.9 30.5-21.5s3.7-19.5 2.6-21.5c-1.2-2.1-4.6-3.3-9.9-6.1z"/></svg>
+                  Chama no Whats
+                </a>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+    
+    <!-- Visualização da Galeria -->
+    <div id="gallery-view" style="display: none;">
+      <div class="gallery-container">
+        <div id="gallery-slides">
+          <!-- Slides serão injetados aqui -->
+        </div>
+        <button class="gallery-nav prev" id="gallery-prev" aria-label="Anterior">&#10094;</button>
+        <button class="gallery-nav next" id="gallery-next" aria-label="Próximo">&#10095;</button>
+        <div id="gallery-dots" class="gallery-dots-container">
+          <!-- Dots serão injetados aqui -->
+        </div>
+      </div>
+      <button id="gallery-back-button" class="button-back-to-main">Monte seu Kit Agora</button>
+      <button class="close-gallery-button" id="close-gallery-button" aria-label="Fechar Galeria">&times;</button>
+    </div>
+
+    <!-- Painel Administrativo -->
+    <div id="admin-view" style="display: none;">
+      <header>
+          <h1>Painel Administrativo</h1>
+          <div class="header-right">
+            <img src="sousil-festas-logo.png" alt="Logo Sousil Festas" class="logo-admin">
+            <a href="#" id="logout-link">Sair</a>
+          </div>
+      </header>
+      <main>
+          <nav class="admin-tabs">
+            <button data-tab="reservations" class="admin-tab-button active">Reservas</button>
+            <button data-tab="items" class="admin-tab-button">Gerenciar Itens</button>
+            <button data-tab="collections" class="admin-tab-button">Gerenciar Coleções</button>
+          </nav>
+
+          <div id="admin-reservations-tab" class="admin-tab-content active">
+            <section class="filters-section">
+                <h2>Reservas Agendadas</h2>
+                <div class="filter-controls">
+                    <label for="date-filter">Filtrar por data:</label>
+                    <input type="date" id="date-filter">
+                    <button id="clear-filter">Limpar Filtro</button>
+                </div>
+            </section>
+            <section id="bookings-list-container">
+                <div id="bookings-list" aria-live="polite">
+                    <!-- As reservas serão renderizadas aqui -->
+                </div>
+            </section>
+          </div>
+          
+          <div id="admin-items-tab" class="admin-tab-content">
+             <section class="item-management-section">
+                <h2>Adicionar Novo Item</h2>
+                <form id="add-item-form" class="add-item-form-container">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="itemName">Nome do Item</label>
+                            <input type="text" id="itemName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemPrice">Preço (R$)</label>
+                            <input type="number" id="itemPrice" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemImage">Imagem do Item</label>
+                            <input type="file" id="itemImage" accept="image/png, image/jpeg" required>
+                        </div>
+                         <div class="form-group">
+                            <label for="itemZIndex">Z-Index (Ordem)</label>
+                            <input type="number" id="itemZIndex" value="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemWidth">Largura (px)</label>
+                            <input type="number" id="itemWidth" value="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemBottom">Dist. de Baixo (px)</label>
+                            <input type="number" id="itemBottom" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemLeft">Dist. da Esquerda</label>
+                            <input type="text" id="itemLeft" value="calc(50% - 50px)" required>
+                        </div>
+                    </div>
+                    <button type="submit">Adicionar Item</button>
+                </form>
+             </section>
+             <section class="item-management-section">
+                <h2>Itens Atuais</h2>
+                <div id="items-management-list">
+                    <!-- Lista de itens para gerenciar será renderizada aqui -->
+                </div>
+             </section>
+          </div>
+
+          <div id="admin-collections-tab" class="admin-tab-content">
+            <section class="item-management-section">
+               <h2>Adicionar Imagem à Coleção 2025</h2>
+               <form id="add-collection-image-form">
+                   <div class="form-group">
+                       <label for="collectionImage">Nova Imagem</label>
+                       <input type="file" id="collectionImage" accept="image/png, image/jpeg, image/webp" required>
+                   </div>
+                   <button type="submit">Adicionar à Coleção</button>
+               </form>
+            </section>
+            <section class="item-management-section">
+               <h2>Imagens da Coleção Atual</h2>
+               <div id="collection-management-list">
+                   <!-- Lista de imagens da coleção será renderizada aqui -->
+               </div>
+            </section>
+         </div>
+      </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="admin-login-modal" class="modal-container" style="display: none;">
+      <div class="modal-box">
+        <h2>Acesso Restrito</h2>
+        <p>Insira suas credenciais para acessar o painel.</p>
+        <form id="admin-login-form">
+          <div class="form-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" name="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          <p id="login-error-message" style="display: none;"></p>
+          <button type="submit">Entrar</button>
+          <button type="button" class="close-button" data-modal-close="admin-login-modal">&times;</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="lgpd-modal" class="modal-container" style="display: none;">
+        <div class="modal-box page-content">
+            <button type="button" class="close-button" data-modal-close="lgpd-modal">&times;</button>
+            <h2>Política de Privacidade e LGPD</h2>
+            <p>A Sousil Festas valoriza a privacidade de seus clientes e está comprometida em proteger seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).</p>
+            <p>Ao utilizar nossos serviços e fornecer seus dados (nome, endereço, telefone) para a solicitação de uma reserva, você concorda que a Sousil Festas utilize essas informações exclusivamente para os seguintes fins:</p>
+            <ul>
+                <li>Entrar em contato para confirmar detalhes da sua solicitação de serviço.</li>
+                <li>Coordenar a logística de entrega, montagem e retirada do kit de festa.</li>
+                <li>Gerenciar o agendamento e a disponibilidade de nossos produtos.</li>
+            </ul>
+            <p>Garantimos que seus dados são mantidos em sigilo e segurança, não sendo compartilhados com terceiros para fins de marketing ou qualquer outra finalidade não relacionada diretamente à prestação do serviço contratado.</p>
+            <p>Ao prosseguir com a reserva, você declara estar ciente e de acordo com nossa política de uso de dados.</p>
+        </div>
+    </div>
+
+    <div id="delete-confirm-modal" class="modal-container" style="display: none;">
+      <div class="modal-box">
+        <h2>Confirmar Exclusão</h2>
+        <p>Você tem certeza que deseja excluir esta reserva? Esta ação não pode ser desfeita.</p>
+        <div class="modal-actions">
+          <button type="button" class="button-secondary" data-modal-close="delete-confirm-modal">Cancelar</button>
+          <button type="button" id="confirm-delete-button" class="button-danger">Sim, Excluir</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="fullscreen-preview-modal" class="modal-container" style="display: none;">
+      <div class="modal-box">
+        <button type="button" class="close-button" data-modal-close="fullscreen-preview-modal">&times;</button>
+        <div id="fullscreen-preview-content">
+          <!-- Cloned preview will go here -->
+        </div>
+      </div>
+    </div>
+
+
+    <footer>
+       <p>
+         Sousil Festas &copy; 2025 | 
+         <a href="https://www.instagram.com/sousilfestas/" target="_blank" rel="noopener noreferrer">Siga-nos no Instagram</a> | 
+         <a href="#" data-modal-open="lgpd-modal">LGPD</a> |
+         <a href="#" data-modal-open="admin-login-modal" aria-label="Acessar Painel Administrativo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zM5 8v2h6V8H5z" opacity=".5"/>
+                <path d="M4 8a1 1 0 0 1-1-1V3a3 3 0 1 1 6 0v4a1 1 0 0 1-1 1H4zm1-4.5a.5.5 0 0 0-1 0V5h1V3.5z"/>
+                <path d="M2 9a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V11a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h12z"/>
+             </svg>
+         </a>
+       </p>
+    </footer>
+  </div>
+  <script type="module" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
